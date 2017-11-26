@@ -16,6 +16,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 using System.ComponentModel;
+
 namespace Server_gui
 {
     /// <summary>
@@ -25,21 +26,24 @@ namespace Server_gui
     {
         public server_managed server;
         public BindingList<string> msglist=new BindingList<string>();
+        ThreadStart UIRefreshRef;
+        Thread UIRefresh;
+
         public MainWindow()
         {
             InitializeComponent();
             server = new server_managed();
-            listBox.ItemsSource = msglist;
             BindingSource bs = new BindingSource();
             bs.DataSource = msglist;
-
             listBox1.ItemsSource = bs;
-            listBox1.DisplayMemberPath = "ToString";
-
-
+            UIRefreshRef = new ThreadStart(UpdateData);
+            UIRefresh = new Thread(UIRefreshRef);
+            UIRefresh.Start();
         }
+
         ThreadStart serverThreadRef ;
         Thread serverThread ;
+
         private void button_Click(object sender, RoutedEventArgs e)
         {
             serverThreadRef = new ThreadStart(StartSever);
@@ -64,8 +68,24 @@ namespace Server_gui
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             serverThread.Abort();
-            //server.close();
             label1.Content = "Closed";
+            
+        }
+
+        private void UpdateData()
+        {
+            while (true)
+            {
+                for (int i = msglist.Count; i < server.msgCount(); i++)
+                {
+                    App.Current.Dispatcher.Invoke((Action)delegate // <--- HERE
+                    {
+                      //  _matchObsCollection.Add(match);
+                    msglist.Add(server.msg(i));
+                    });
+                }
+                Thread.Sleep(100);
+            }
             
         }
 
@@ -74,8 +94,6 @@ namespace Server_gui
             for(int i = msglist.Count; i < server.msgCount(); i++)
             {
                 msglist.Add( server.msg(i));
-                
-           //     listBox.Items.Add(msglist[i]);
             }
         }
     }
