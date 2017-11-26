@@ -20,7 +20,7 @@ namespace Server_gui
     /// </summary>
     public partial class MainWindow : Window
     {
-        
+        public server_managed server;
 
         public MainWindow()
         {
@@ -30,7 +30,7 @@ namespace Server_gui
 
         private void button_Click(object sender, RoutedEventArgs e)
         {
-            public cse
+            server.Init()
         }
     }
 }
