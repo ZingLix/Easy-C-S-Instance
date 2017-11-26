@@ -101,7 +101,7 @@ void CServerNet::Run()
 					printf("ending connection");
 				else
 					//显示接收到的数据
-					printf("recv %s\n", buf);
+					msglist.push_back(new string(buf));
 
 
 			} while (rval != 0);

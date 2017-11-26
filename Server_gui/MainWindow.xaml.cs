@@ -12,7 +12,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-
+using System.Runtime.InteropServices;
+using System.Threading;
+using System.Windows.Forms;
+using System.ComponentModel;
 namespace Server_gui
 {
     /// <summary>
@@ -21,16 +24,59 @@ namespace Server_gui
     public partial class MainWindow : Window
     {
         public server_managed server;
-
+        public BindingList<string> msglist=new BindingList<string>();
         public MainWindow()
         {
             InitializeComponent();
+            server = new server_managed();
+            listBox.ItemsSource = msglist;
+            BindingSource bs = new BindingSource();
+            bs.DataSource = msglist;
+
+            listBox1.ItemsSource = bs;
+            listBox1.DisplayMemberPath = "ToString";
+
+
+        }
+        ThreadStart serverThreadRef ;
+        Thread serverThread ;
+        private void button_Click(object sender, RoutedEventArgs e)
+        {
+            serverThreadRef = new ThreadStart(StartSever);
+            serverThread = new Thread(serverThreadRef);
+            serverThread.Start();
+            label1.Content = "Running";
+        }
+
+        public void StartSever()
+        {
+            string add = "127.0.0.1";
+            IntPtr intPtrStr = (IntPtr)Marshal.StringToHGlobalAnsi(add);
+            unsafe
+            {
+                sbyte* sbyteStr = (sbyte*)intPtrStr;
+                server.Init(sbyteStr, 8888);
+                server.Run();
+                
+            }
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            serverThread.Abort();
+            //server.close();
+            label1.Content = "Closed";
             
         }
 
-        private void button_Click(object sender, RoutedEventArgs e)
+        private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            server.Init()
+            for(int i = msglist.Count; i < server.msgCount(); i++)
+            {
+                msglist.Add( server.msg(i));
+                
+           //     listBox.Items.Add(msglist[i]);
+            }
         }
     }
 }

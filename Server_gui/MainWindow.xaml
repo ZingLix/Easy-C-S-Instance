@@ -11,6 +11,9 @@
         <Button x:Name="button" Content="Button" HorizontalAlignment="Left" Height="22" Margin="143,20,0,0" VerticalAlignment="Top" Width="70" Click="button_Click"/>
         <ListBox x:Name="listBox" HorizontalAlignment="Left" Height="216" Margin="27,66,0,0" VerticalAlignment="Top" Width="113"/>
         <ListBox x:Name="listBox1" HorizontalAlignment="Left" Height="214" Margin="201,68,0,0" VerticalAlignment="Top" Width="270"/>
+        <Label x:Name="label1" Content="Label" HorizontalAlignment="Left" Margin="372,16,0,0" VerticalAlignment="Top"/>
+        <Button Content="Button" HorizontalAlignment="Left" Height="22" Margin="229,20,0,0" VerticalAlignment="Top" Width="72" Click="Button_Click_1"/>
+        <Button Content="RefreshButton" HorizontalAlignment="Left" Height="19" Margin="399,292,0,0" VerticalAlignment="Top" Width="50" Click="Button_Click_2"/>
 
     </Grid>
 </Window>
