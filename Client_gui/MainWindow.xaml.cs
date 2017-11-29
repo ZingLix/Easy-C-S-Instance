@@ -14,6 +14,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Threading;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
+using System.ComponentModel;
 
 namespace Client_gui
 {
@@ -69,6 +71,18 @@ namespace Client_gui
                 sbyte* sbyteStr = (sbyte*)intPtrStr;
                 client.SendMsg(sbyteStr,msg.Length);
             }
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            BindingList<string> ErrMsgList = new BindingList<string>();
+            for (int i = 0; i < client.errMsgCount(); i++)
+            {
+                ErrMsgList.Add(client.errMsg(i));
+            }
+            BindingSource bs = new BindingSource();
+            bs.DataSource = ErrMsgList;
+            ListBox_ErrMsg.ItemsSource = bs;
         }
     }
 }

@@ -14,8 +14,7 @@ int CServerNet::Init(const char* address, int port)
 	if (iErrorMsg != NO_ERROR)
 	{
 		//初始化WinSock失败
-		printf("wsastartup failed with error : %d\n", iErrorMsg);
-
+		errMsgList.push_back(new string("wsastartup failed with error : " + to_string(iErrorMsg)));
 		rlt = 1;
 		return rlt;
 	}
@@ -26,7 +25,7 @@ int CServerNet::Init(const char* address, int port)
 
 	{
 		//创建Socket异常
-		printf("socket failed with error : %d\n", WSAGetLastError());
+		errMsgList.push_back(new string("socket failed with error : " + to_string(iErrorMsg)));
 
 		rlt = 2;
 		return rlt;
@@ -43,12 +42,11 @@ int CServerNet::Init(const char* address, int port)
 	if (iErrorMsg < 0)
 	{
 		//绑定失败
-		printf("bind failed with error : %d\n", iErrorMsg);
+		errMsgList.push_back(new string("bind failed with error : " + to_string(iErrorMsg)));
+
 		rlt = 3;
 		return rlt;
 	}
-
-
 
 	return rlt;
 }

@@ -1,5 +1,7 @@
 #pragma once
 #include <iostream>
+#include <vector>
+#include <string>
 #include<windows.h>
 
 #pragma comment(lib, "Ws2_32.lib")
@@ -12,8 +14,11 @@ public:
 	//发送信息
 	int SendMsg(const char* msg, int len);
 	//关闭
+	int errMsgCount() { return ErrMsgList.size(); }
+	std::string* errMsg(int i) { return ErrMsgList[i]; }
 	void Close();
 
 private:
 	SOCKET m_sock;
+	std::vector<std::string*> ErrMsgList;
 };

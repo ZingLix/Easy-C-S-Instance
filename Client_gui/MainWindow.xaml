@@ -12,8 +12,9 @@
         <Button Content="Connect" HorizontalAlignment="Left" Height="22" Margin="334,10,0,0" VerticalAlignment="Top" Width="90" Click="Button_Click"/>
         <TextBox x:Name="TextBox_Msg" HorizontalAlignment="Left" Height="25" Margin="25,48,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="267"/>
         <Button Content="Button" HorizontalAlignment="Left" Height="25" Margin="334,48,0,0" VerticalAlignment="Top" Width="90" Click="Button_Click_1"/>
-        <ListBox HorizontalAlignment="Left" Height="181" Margin="25,93,0,0" VerticalAlignment="Top" Width="399"/>
+        <ListBox x:Name="ListBox_ErrMsg" HorizontalAlignment="Left" Height="181" Margin="25,93,0,0" VerticalAlignment="Top" Width="399"/>
         <Label x:Name="Status" Content="Label" HorizontalAlignment="Left" Height="31" Margin="438,6,0,0" VerticalAlignment="Top" Width="59"/>
+        <Button Content="Button" HorizontalAlignment="Left" Height="26" Margin="330,283,0,0" VerticalAlignment="Top" Width="82" Click="Button_Click_2"/>
 
     </Grid>
 </Window>

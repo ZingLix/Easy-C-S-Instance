@@ -16,6 +16,14 @@ public:
 		System::String ^S = gcnew System::String(str.c_str());
 		return S;
 	}
+
+	int errMsgCount() { return ser->errMsgCount(); }
+	System::String^ errMsg(int i) {
+		string str = *ser->errMsg(i);
+		System::String ^S = gcnew System::String(str.c_str());
+		return S;
+	}
+
 private:
 	CServerNet *ser;
 };

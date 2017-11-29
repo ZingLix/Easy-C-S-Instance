@@ -13,7 +13,7 @@ int CClientNet::Connect(int port, const char* address)
 		//”–¥ÌŒÛ
 	{
 		printf("failed with wsaStartup error : %d\n", iErrMsg);
-
+		ErrMsgList.push_back(new std::string("failed with wsaStartup error : " + std::to_string(iErrMsg)));
 		rlt = 1;
 		return rlt;
 	}
@@ -24,7 +24,7 @@ int CClientNet::Connect(int port, const char* address)
 		//¥¥Ω®Socket ß∞‹
 	{
 		printf("socket failed with error : %d\n", WSAGetLastError());
-
+		ErrMsgList.push_back(new std::string("socket failed with error : " + std::to_string(iErrMsg)));
 		rlt = 2;
 		return rlt;
 	}
@@ -40,6 +40,7 @@ int CClientNet::Connect(int port, const char* address)
 	if (iErrMsg < 0)
 	{
 		printf("connect failed with error : %d\n", iErrMsg);
+		ErrMsgList.push_back(new std::string("connect failed with error : " + std::to_string(iErrMsg)));
 
 		rlt = 3;
 		return rlt;
@@ -63,6 +64,7 @@ int CClientNet::SendMsg(const char* msg, int len)
 		//∑¢ÀÕ ß∞‹
 	{
 		printf("send msg failed with error : %d\n", iErrMsg);
+		ErrMsgList.push_back(new std::string("send msg failed with error : " + std::to_string(iErrMsg)));
 
 		rlt = 1;
 		return rlt;

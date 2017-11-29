@@ -59,9 +59,12 @@ namespace Server_gui
             unsafe
             {
                 sbyte* sbyteStr = (sbyte*)intPtrStr;
-                server.Init(sbyteStr, 8888);
-                server.Run();
-                
+                int flag = server.Init(sbyteStr, 8888);
+                if(flag == 0)
+                {
+                    server.Run();
+                    label1.Content = "Running";
+                }
             }
         }
 
@@ -95,6 +98,18 @@ namespace Server_gui
             {
                 msglist.Add( server.msg(i));
             }
+        }
+
+        private void Button_Click_3(object sender, RoutedEventArgs e)
+        {
+            BindingList<string> ErrMsgList = new BindingList<string>();
+            for (int i = 0; i < server.errMsgCount(); i++)
+            {
+                ErrMsgList.Add(server.errMsg(i));
+            }
+            BindingSource bs = new BindingSource();
+            bs.DataSource = ErrMsgList;
+            listBox3.ItemsSource = bs;
         }
     }
 }
