@@ -38,6 +38,7 @@ namespace Client_gui
         {
             string add="";
             int port = 0;
+            int flag;
             this.Dispatcher.Invoke(() =>
             {
                 add = TextBox_IP.Text;
@@ -47,11 +48,20 @@ namespace Client_gui
             unsafe
             {
                 sbyte* sbyteStr = (sbyte*)intPtrStr;
-                client.Connect( port,sbyteStr);
+                flag = client.Connect( port,sbyteStr);
             }
-            this.Dispatcher.Invoke(() =>
+             this.Dispatcher.Invoke(() =>
             {
+                if (flag == 0)
+                {
+
                 Status.Content = "Connected";
+                }
+                else
+                {
+                    Status.Content = "Error";
+                    ErrMsgRefresh();
+                }
             });
         }
 
@@ -73,7 +83,7 @@ namespace Client_gui
             }
         }
 
-        private void Button_Click_2(object sender, RoutedEventArgs e)
+        private void ErrMsgRefresh()
         {
             BindingList<string> ErrMsgList = new BindingList<string>();
             for (int i = 0; i < client.errMsgCount(); i++)
@@ -83,6 +93,11 @@ namespace Client_gui
             BindingSource bs = new BindingSource();
             bs.DataSource = ErrMsgList;
             ListBox_ErrMsg.ItemsSource = bs;
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            ErrMsgRefresh();
         }
     }
 }

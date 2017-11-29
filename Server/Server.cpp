@@ -88,11 +88,11 @@ void CServerNet::Run()
 				rval = recv(newSocket, buf, 1024, 0);
 
 
-				if (rval == SOCKET_ERROR)
+				if (rval == SOCKET_ERROR) {
 					//这应该是个异常，当客户端没有调用closeSocket就直接退出游戏的时候，将会进入这里
 					printf("recv socket error\n");
-
-
+					closesocket(m_sock);
+				}
 
 				if (rval == 0)
 					//recv返回0表示正常退出

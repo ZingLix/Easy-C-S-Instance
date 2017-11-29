@@ -11,6 +11,7 @@ public:
 		ser->Run();
 	}
 	int msgCount() { return ser->msgCount(); }
+
 	System::String^ msg(int i) { 
 		string str = *ser->msg(i);
 		System::String ^S = gcnew System::String(str.c_str());
