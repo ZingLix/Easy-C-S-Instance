@@ -5,7 +5,10 @@
 #include <vector>
 #include <string>
 #include <cstdlib>
-using namespace std;
+#include <algorithm>
+
+
+//using namespace std;
 #pragma comment (lib,"ws2_32.lib")
 
 class CServerNet
@@ -20,13 +23,23 @@ public:
 	void close() {
 		closesocket(m_sock);
 	}
-	int msgCount() { return msglist.size(); }
-	string* msg(int i) { return msglist[i]; }
+	int clientCount() { return msglist.size(); }
+	int clientMsgCount(int i) { return msglist[i]->msg.size(); }
+	int clientID(int i) { return msglist[i]->id; }
+	std::string* msg(int i,int j) { return msglist[i]->msg[j]; }
 	int errMsgCount() { return errMsgList.size(); }
-	string* errMsg(int i) { return errMsgList[i]; }
-
+	std::string* errMsg(int i) { return errMsgList[i]; }
+	void CServerNet::RevMsgThread(SOCKET newSocket);
 private:
-	vector<string*> msglist;
+	struct clientInfo;
+	std::vector<clientInfo*> msglist;
 	SOCKET m_sock;
-	vector<string*> errMsgList;
+	std::vector<std::string*> errMsgList;
+	std::vector<SOCKET> clientList;
+
+	struct clientInfo {
+		int id;
+		std::vector<std::string*> msg;
+		clientInfo(SOCKET S) { id = S; }
+	};
 };

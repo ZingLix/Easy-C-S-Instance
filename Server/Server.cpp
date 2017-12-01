@@ -1,5 +1,6 @@
 #include "Server.h"
 
+#include <thread>
 int CServerNet::Init(const char* address, int port)
 {
 	int rlt = 0;
@@ -14,7 +15,7 @@ int CServerNet::Init(const char* address, int port)
 	if (iErrorMsg != NO_ERROR)
 	{
 		//初始化WinSock失败
-		errMsgList.push_back(new string("wsastartup failed with error : " + to_string(iErrorMsg)));
+		errMsgList.push_back(new std::string("wsastartup failed with error : " + std::to_string(iErrorMsg)));
 		rlt = 1;
 		return rlt;
 	}
@@ -25,11 +26,17 @@ int CServerNet::Init(const char* address, int port)
 
 	{
 		//创建Socket异常
-		errMsgList.push_back(new string("socket failed with error : " + to_string(iErrorMsg)));
+		errMsgList.push_back(new std::string("socket failed with error : " + std::to_string(iErrorMsg)));
 
 		rlt = 2;
 		return rlt;
 	}
+
+	//设置套接字非阻塞模式  
+	//unsigned long ul = 1;
+	//rlt = ioctlsocket(m_sock, FIONBIO, (unsigned long*)&ul);
+	//if (SOCKET_ERROR == rlt)
+	//	return FALSE;
 
 	//声明信息
 	sockaddr_in serverAddr;
@@ -42,7 +49,7 @@ int CServerNet::Init(const char* address, int port)
 	if (iErrorMsg < 0)
 	{
 		//绑定失败
-		errMsgList.push_back(new string("bind failed with error : " + to_string(iErrorMsg)));
+		errMsgList.push_back(new std::string("bind failed with error : " + std::to_string(iErrorMsg)));
 
 		rlt = 3;
 		return rlt;
@@ -59,6 +66,7 @@ void CServerNet::Run()
 	sockaddr_in tcpAddr;
 	int len = sizeof(sockaddr);
 	SOCKET newSocket;
+
 	char buf[1024];
 	int rval;
 
@@ -71,41 +79,33 @@ void CServerNet::Run()
 		if (newSocket == INVALID_SOCKET)
 		{
 			//非可用socket
-
+			//errMsgList.push_back(new std::string("asdfa"));
+			//Sleep(100);
+			//int nErrCode = WSAGetLastError();
+			//if (nErrCode == WSAEWOULDBLOCK)  //无法立即完成一个非阻挡性套接字操作  
+			//{
+			//	Sleep(100);
+			//	continue;//继续等待  
+			//}
+			//else
+			//{
+			//	break;//线程退出  
+			//}
 		}
 		else
 		{
 			//新socket连接
+		//	char *pClientIP = inet_ntoa(tcpAddr.sin_addr);
+		//	u_short  clientPort = ntohs(tcpAddr.sin_port);
 			printf("new socket connect : %d\n", newSocket);
+			//	errMsgList.push_back(new std::string("new socket connect : "+ std::to_string(newSocket)+",IP:"+pClientIP+",port:"+std::to_string(clientPort)));
 
+				//消息处理
+			//	using namespace System::Threading;
+			//	Thread ^ oThread = gcnew Thread(gcnew ParameterizedThreadStart(&CServerNet::RevMsgThread));
+			std::thread thr(&CServerNet::RevMsgThread, this, newSocket);
+			thr.detach();
 
-			//消息处理
-			do
-			{
-				printf("process\n");
-				//接收数据
-				memset(buf, 0, sizeof(buf));
-				rval = recv(newSocket, buf, 1024, 0);
-
-
-				if (rval == SOCKET_ERROR) {
-					//这应该是个异常，当客户端没有调用closeSocket就直接退出游戏的时候，将会进入这里
-					printf("recv socket error\n");
-					closesocket(m_sock);
-				}
-
-				if (rval == 0)
-					//recv返回0表示正常退出
-					printf("ending connection");
-				else
-					//显示接收到的数据
-					msglist.push_back(new string(buf));
-
-
-			} while (rval != 0);
-
-			//关闭对应Accept的socket
-			closesocket(newSocket);
 		}
 
 
@@ -114,4 +114,41 @@ void CServerNet::Run()
 
 	//关闭自身的Socket
 	closesocket(m_sock);
+}
+
+void  CServerNet::RevMsgThread(SOCKET newSocket){
+
+	char buf[1024];
+	int rval;
+	clientList.push_back(newSocket);
+	msglist.push_back(new clientInfo(newSocket));
+	int count = msglist.size()-1;
+	do
+	{
+		printf("process\n");
+		//接收数据
+		memset(buf, 0, sizeof(buf));
+		rval = recv(newSocket, buf, 1024, 0);
+
+
+		if (rval == SOCKET_ERROR) {
+			//这应该是个异常，当客户端没有调用closeSocket就直接退出游戏的时候，将会进入这里
+			printf("recv socket error\n");
+			errMsgList.push_back(new std::string("recv socket error"));
+			break;
+		}
+
+		if (rval == 0)
+			//recv返回0表示正常退出
+			printf("ending connection");
+		else {
+
+			//显示接收到的数据
+			msglist[count]->msg.push_back(new std::string(buf));
+		}
+
+
+	} while (rval != 0);
+	clientList.erase(std::find(clientList.begin(),clientList.end(),newSocket));
+	closesocket(newSocket);
 }

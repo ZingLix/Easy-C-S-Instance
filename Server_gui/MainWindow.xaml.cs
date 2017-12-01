@@ -25,17 +25,46 @@ namespace Server_gui
     public partial class MainWindow : Window
     {
         public server_managed server;
-        public BindingList<string> msglist=new BindingList<string>();
+      //  public BindingList<string> msglist=new BindingList<string>();
+        public BindingList<ClientInfo> clientlist = new BindingList<ClientInfo>();
+      //  public BindingList<string> msglist = new BindingList<string>();
         ThreadStart UIRefreshRef;
         Thread UIRefresh;
+        BindingSource msglistbs;
+
+        public class ClientInfo
+        {
+            public ClientInfo()
+            {
+                id = 0;
+                msglist = new BindingList<string>();
+              
+            }
+            public BindingList<string> msglist;
+            public int id;
+            public void setid(int i) { id = i;  }
+            public string name
+            {
+                get
+                {
+                    return id.ToString();
+                }
+            }
+        }
 
         public MainWindow()
         {
             InitializeComponent();
             server = new server_managed();
             BindingSource bs = new BindingSource();
-            bs.DataSource = msglist;
-            listBox1.ItemsSource = bs;
+            bs.DataSource = clientlist;
+            
+            listBox.ItemsSource = bs;
+            listBox.DisplayMemberPath = "name";
+            //  listBox.
+            msglistbs = new BindingSource();
+
+            listBox1.ItemsSource = msglistbs;
             UIRefreshRef = new ThreadStart(UpdateData);
             UIRefresh = new Thread(UIRefreshRef);
             UIRefresh.Start();
@@ -79,12 +108,21 @@ namespace Server_gui
         {
             while (true)
             {
-                for (int i = msglist.Count; i < server.msgCount(); i++)
+                for (int i = 0; i < server.clientCount(); i++)
                 {
                     App.Current.Dispatcher.Invoke((Action)delegate // <--- HERE
                     {
-                      //  _matchObsCollection.Add(match);
-                    msglist.Add(server.msg(i));
+                        //  _matchObsCollection.Add(match);
+                        if (i >= clientlist.Count)
+                        {
+
+                            clientlist.Add(new ClientInfo());
+                            clientlist[i].setid(server.clientID(i));
+                        }
+                        for (int j = clientlist[i].msglist.Count; j < server.clientMsgCount(i); j++)
+                        {
+                                    clientlist[i].msglist.Add(server.msg(i, j));
+                        }
                     });
                 }
                 Thread.Sleep(100);
@@ -92,13 +130,6 @@ namespace Server_gui
             
         }
 
-        private void Button_Click_2(object sender, RoutedEventArgs e)
-        {
-            for(int i = msglist.Count; i < server.msgCount(); i++)
-            {
-                msglist.Add( server.msg(i));
-            }
-        }
 
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
@@ -110,6 +141,26 @@ namespace Server_gui
             BindingSource bs = new BindingSource();
             bs.DataSource = ErrMsgList;
             listBox3.ItemsSource = bs;
+            for (int i = 0; i < server.clientCount(); i++)
+            {
+                if (i >=clientlist.Count)
+                {
+
+                    clientlist.Add(new ClientInfo());
+                    clientlist[i].setid(i);
+                }
+                    for (int j = clientlist[i].msglist.Count; j < server.clientMsgCount(i); j++)
+                    {
+                        clientlist[i].msglist.Add(server.msg(i, j));
+                    }
+            }
+        }
+
+
+
+        private void listBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            msglistbs.DataSource = clientlist[listBox.SelectedIndex].msglist;
         }
     }
 }

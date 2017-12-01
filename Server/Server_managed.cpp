@@ -10,17 +10,18 @@ public:
 	void close() {
 		ser->Run();
 	}
-	int msgCount() { return ser->msgCount(); }
-
-	System::String^ msg(int i) { 
-		string str = *ser->msg(i);
+	int clientCount() { return ser->clientCount(); }
+	int clientMsgCount(int i) { return ser->clientMsgCount(i); }
+	int clientID(int i) { return ser->clientID(i); }
+	System::String^ msg(int i,int j) { 
+		std::string str = *ser->msg(i,j);
 		System::String ^S = gcnew System::String(str.c_str());
 		return S;
 	}
 
 	int errMsgCount() { return ser->errMsgCount(); }
 	System::String^ errMsg(int i) {
-		string str = *ser->errMsg(i);
+		std::string str = *ser->errMsg(i);
 		System::String ^S = gcnew System::String(str.c_str());
 		return S;
 	}

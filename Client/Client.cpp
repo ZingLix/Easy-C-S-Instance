@@ -45,6 +45,7 @@ int CClientNet::Connect(int port, const char* address)
 		rlt = 3;
 		return rlt;
 	}
+	ErrMsgList.push_back(new std::string("ok: " + std::to_string(iErrMsg)));
 
 	return rlt;
 }
