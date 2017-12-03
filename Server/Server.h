@@ -44,6 +44,7 @@ private:
 		int id;
 		SOCKET Soc;
 		std::vector<std::string*> msg;
-		clientInfo(SOCKET S) { id = S; Soc = S; }
+		int status;
+		clientInfo(SOCKET S) { id = S; Soc = S; status = 0; }
 	};
 };

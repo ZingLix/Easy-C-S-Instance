@@ -169,4 +169,5 @@ void CServerNet::SendMsg(int index,std::string s) {
 
 void CServerNet::CloseClient(int index) {
 	SendMsg(index, "CloseConnection");
+	
 }

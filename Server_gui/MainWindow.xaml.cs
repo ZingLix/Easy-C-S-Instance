@@ -174,5 +174,10 @@ namespace Server_gui
         {
             server.CloseClient(listBox.SelectedIndex);
         }
+
+        private void textBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
     }
 }
