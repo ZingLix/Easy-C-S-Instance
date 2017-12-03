@@ -1,5 +1,5 @@
 #include "Client.h"
-
+#include <thread>
 int CClientNet::Connect(int port, const char* address)
 {
 	int rlt = 0;
@@ -47,6 +47,8 @@ int CClientNet::Connect(int port, const char* address)
 	}
 	ErrMsgList.push_back(new std::string("ok: " + std::to_string(iErrMsg)));
 
+	std::thread thr(&CClientNet::RecvMsg, this);
+	thr.detach();
 	return rlt;
 }
 
@@ -72,6 +74,21 @@ int CClientNet::SendMsg(const char* msg, int len)
 	}
 
 	return rlt;
+}
+
+void CClientNet::RecvMsg() {
+	char buf[1024];
+	memset(buf, '\0', 1024);
+		char CloseMsg[] = "CloseConnection";
+	do{
+		int k = recv(m_sock, buf, 1024, 0);
+		if (!strcmp(buf,CloseMsg)) {
+			Close();
+			break;
+		}
+		ErrMsgList.push_back(new std::string(buf));
+		memset(buf, '\0', 1024);
+	} while (1);
 }
 
 void CClientNet::Close()

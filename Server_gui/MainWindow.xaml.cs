@@ -162,5 +162,17 @@ namespace Server_gui
         {
             msglistbs.DataSource = clientlist[listBox.SelectedIndex].msglist;
         }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            String s = listBox_SendMsg.Text;
+
+            server.SendMsg(listBox.SelectedIndex, listBox_SendMsg.Text);
+        }
+
+        private void Button_Click_4(object sender, RoutedEventArgs e)
+        {
+            server.CloseClient(listBox.SelectedIndex);
+        }
     }
 }

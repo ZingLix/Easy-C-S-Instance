@@ -5,16 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Server_gui"
         mc:Ignorable="d"
-        Title="MainWindow" Height="490" Width="525">
-    <Grid Margin="0,0,-8,-21">
+        Title="MainWindow" Height="542" Width="593.8">
+    <Grid Margin="0,0,-6.6,-20">
         <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="22" Margin="27,20,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="97"/>
         <Button x:Name="button" Content="Button" HorizontalAlignment="Left" Height="22" Margin="143,20,0,0" VerticalAlignment="Top" Width="70" Click="button_Click"/>
         <ListBox x:Name="listBox" HorizontalAlignment="Left" Height="216" Margin="27,66,0,0" VerticalAlignment="Top" Width="113" SelectionChanged="listBox_SelectionChanged"/>
         <ListBox x:Name="listBox1" HorizontalAlignment="Left" Height="214" Margin="201,68,0,0" VerticalAlignment="Top" Width="270"/>
         <Label x:Name="label1" Content="Label" HorizontalAlignment="Left" Margin="372,16,0,0" VerticalAlignment="Top"/>
         <Button Content="Button" HorizontalAlignment="Left" Height="22" Margin="229,20,0,0" VerticalAlignment="Top" Width="72" Click="Button_Click_1"/>
-        <ListBox x:Name="listBox3" HorizontalAlignment="Left" Height="117" Margin="27,313,0,0" VerticalAlignment="Top" Width="444"/>
-        <Button Content="Button" HorizontalAlignment="Left" Height="20" Margin="381,435,0,0" VerticalAlignment="Top" Width="90" Click="Button_Click_3"/>
+        <ListBox x:Name="listBox3" HorizontalAlignment="Left" Height="117" Margin="27,342,0,0" VerticalAlignment="Top" Width="444"/>
+        <Button Content="Button" HorizontalAlignment="Left" Height="20" Margin="381,473,0,0" VerticalAlignment="Top" Width="90" Click="Button_Click_3"/>
+        <TextBox x:Name="listBox_SendMsg" HorizontalAlignment="Left" Height="27" Margin="28,299,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="339"/>
+        <Button Content="Button" HorizontalAlignment="Left" Height="27" Margin="390,299,0,0" VerticalAlignment="Top" Width="81" Click="Button_Click_2"/>
+        <Button Content="Button" HorizontalAlignment="Left" Margin="494,68,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_4"/>
 
     </Grid>
 </Window>

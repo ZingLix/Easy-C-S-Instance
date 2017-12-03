@@ -27,11 +27,16 @@ namespace Client_gui
         Client_managed client;
         ThreadStart ClientThreadRef;
         Thread ClientThread;
+        ThreadStart UIRefreshRef;
+        Thread UIRefreshThread;
 
         public MainWindow()
         {
             InitializeComponent();
             client = new Client_managed();
+            UIRefreshRef = new ThreadStart(ErrMsgRefresh);
+            UIRefreshThread = new Thread(UIRefreshRef);
+            UIRefreshThread.Start();
         }
 
         public void StartClient()
@@ -86,13 +91,24 @@ namespace Client_gui
         private void ErrMsgRefresh()
         {
             BindingList<string> ErrMsgList = new BindingList<string>();
-            for (int i = 0; i < client.errMsgCount(); i++)
-            {
-                ErrMsgList.Add(client.errMsg(i));
-            }
             BindingSource bs = new BindingSource();
             bs.DataSource = ErrMsgList;
+            while (true)
+            {
+
+            App.Current.Dispatcher.Invoke((Action)delegate // <--- HERE
+            {
+                //  _matchObsCollection.Add(match);
+                
             ListBox_ErrMsg.ItemsSource = bs;
+
+                for (int i = ErrMsgList.Count; i < client.errMsgCount(); i++)
+                {
+                    ErrMsgList.Add(client.errMsg(i));
+                }
+            });
+                Thread.Sleep(100);
+            }
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)

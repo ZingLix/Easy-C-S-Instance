@@ -29,17 +29,21 @@ public:
 	std::string* msg(int i,int j) { return msglist[i]->msg[j]; }
 	int errMsgCount() { return errMsgList.size(); }
 	std::string* errMsg(int i) { return errMsgList[i]; }
-	void CServerNet::RevMsgThread(SOCKET newSocket);
+	void RevMsgThread(SOCKET newSocket);
+	void SendMsg(int index,std::string s);
+	void CloseClient(int index);
 private:
 	struct clientInfo;
 	std::vector<clientInfo*> msglist;
 	SOCKET m_sock;
 	std::vector<std::string*> errMsgList;
 	std::vector<SOCKET> clientList;
+	//std::vector<std::thread&> ClientThreadPool;
 
 	struct clientInfo {
 		int id;
+		SOCKET Soc;
 		std::vector<std::string*> msg;
-		clientInfo(SOCKET S) { id = S; }
+		clientInfo(SOCKET S) { id = S; Soc = S; }
 	};
 };

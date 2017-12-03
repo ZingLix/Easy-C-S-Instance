@@ -1,4 +1,5 @@
 #include "Server.h"
+#include <msclr\marshal_cppstd.h>
 
 public ref class server_managed {
 public:
@@ -26,6 +27,14 @@ public:
 		return S;
 	}
 
+	void SendMsg(int index, System::String^ s) {
+		std::string str= msclr::interop::marshal_as<std::string>(s);
+		ser->SendMsg(index, str);
+	}
+
+	void CloseClient(int index) {
+		ser->CloseClient(index);
+	}
 private:
 	CServerNet *ser;
 };

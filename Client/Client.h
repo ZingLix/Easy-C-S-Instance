@@ -16,6 +16,7 @@ public:
 	//¹Ø±Õ
 	int errMsgCount() { return ErrMsgList.size(); }
 	std::string* errMsg(int i) { return ErrMsgList[i]; }
+	void RecvMsg();
 	void Close();
 
 private:

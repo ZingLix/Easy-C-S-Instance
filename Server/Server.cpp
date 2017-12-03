@@ -67,9 +67,6 @@ void CServerNet::Run()
 	int len = sizeof(sockaddr);
 	SOCKET newSocket;
 
-	char buf[1024];
-	int rval;
-
 	do
 	{
 		//接收信息
@@ -104,6 +101,7 @@ void CServerNet::Run()
 			//	using namespace System::Threading;
 			//	Thread ^ oThread = gcnew Thread(gcnew ParameterizedThreadStart(&CServerNet::RevMsgThread));
 			std::thread thr(&CServerNet::RevMsgThread, this, newSocket);
+//			ClientThreadPool.push_back(thr);
 			thr.detach();
 
 		}
@@ -140,7 +138,10 @@ void  CServerNet::RevMsgThread(SOCKET newSocket){
 
 		if (rval == 0)
 			//recv返回0表示正常退出
+		{
 			printf("ending connection");
+			break;
+		}
 		else {
 
 			//显示接收到的数据
@@ -151,4 +152,21 @@ void  CServerNet::RevMsgThread(SOCKET newSocket){
 	} while (rval != 0);
 	clientList.erase(std::find(clientList.begin(),clientList.end(),newSocket));
 	closesocket(newSocket);
+}
+
+void CServerNet::SendMsg(int index,std::string s) {
+	char buf[1024];
+	//memset(buf, '\0',1024);
+	//buf[s.length()] = '\0';
+	int i;
+	for ( i = 0; i < s.length(); i++) {
+		buf[i] = s[i];
+	}
+	buf[i] = '\0';
+	SOCKET S = msglist[index]->Soc;
+	send(S, buf, strlen(buf), 0);
+}
+
+void CServerNet::CloseClient(int index) {
+	SendMsg(index, "CloseConnection");
 }
