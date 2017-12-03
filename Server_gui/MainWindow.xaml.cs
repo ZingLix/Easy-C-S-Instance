@@ -43,11 +43,13 @@ namespace Server_gui
             public BindingList<string> msglist;
             public int id;
             public void setid(int i) { id = i;  }
+            public string ip;
+            public int port;
             public string name
             {
                 get
                 {
-                    return id.ToString();
+                    return ip+":"+port.ToString();
                 }
             }
         }
@@ -118,6 +120,8 @@ namespace Server_gui
 
                             clientlist.Add(new ClientInfo());
                             clientlist[i].setid(server.clientID(i));
+                            clientlist[i].ip = server.GetIP(i);
+                            clientlist[i].port = server.GetPort(i);
                         }
                         for (int j = clientlist[i].msglist.Count; j < server.clientMsgCount(i); j++)
                         {
@@ -161,6 +165,16 @@ namespace Server_gui
         private void listBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             msglistbs.DataSource = clientlist[listBox.SelectedIndex].msglist;
+            if (server.GetStatus(listBox.SelectedIndex) == 0)
+            {
+
+                label_status.Content = "连接正常";
+            }
+            else
+            {
+                label_status.Content = "连接已关闭";
+            }
+            label_IP.Content = server.GetIP(listBox.SelectedIndex);
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
@@ -173,6 +187,15 @@ namespace Server_gui
         private void Button_Click_4(object sender, RoutedEventArgs e)
         {
             server.CloseClient(listBox.SelectedIndex);
+            if (server.GetStatus(listBox.SelectedIndex) == 0)
+            {
+
+                label_status.Content = "连接正常";
+            }
+            else
+            {
+                label_status.Content = "连接已关闭";
+            }
         }
 
         private void textBox_TextChanged(object sender, TextChangedEventArgs e)

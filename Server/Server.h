@@ -32,6 +32,10 @@ public:
 	void RevMsgThread(SOCKET newSocket);
 	void SendMsg(int index,std::string s);
 	void CloseClient(int index);
+	int GetStatus(int index);
+	std::string GetIP(int index);
+	int GetPort(int index);
+
 private:
 	struct clientInfo;
 	std::vector<clientInfo*> msglist;

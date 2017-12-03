@@ -46,7 +46,7 @@ int CClientNet::Connect(int port, const char* address)
 		return rlt;
 	}
 	ErrMsgList.push_back(new std::string("ok: " + std::to_string(iErrMsg)));
-
+	status = 1;
 	std::thread thr(&CClientNet::RecvMsg, this);
 	thr.detach();
 	return rlt;
@@ -86,6 +86,7 @@ void CClientNet::RecvMsg() {
 			Close();
 			break;
 		}
+		if (status == 0) break;
 		ErrMsgList.push_back(new std::string(buf));
 		memset(buf, '\0', 1024);
 	} while (1);
@@ -93,5 +94,26 @@ void CClientNet::RecvMsg() {
 
 void CClientNet::Close()
 {
+	status = 0;
 	closesocket(m_sock);
+}
+
+std::string CClientNet::GetIP() {
+	SOCKADDR_IN addr_conn;
+	int nSize = sizeof(addr_conn);
+	getpeername(m_sock, (SOCKADDR *)&addr_conn, &nSize);
+	std::string s = inet_ntoa(addr_conn.sin_addr);
+	return s;
+}
+
+int CClientNet::GetPort() {
+	SOCKADDR_IN addr_conn;
+	int nSize = sizeof(addr_conn);
+	getpeername(m_sock, (SOCKADDR *)&addr_conn, &nSize);
+	int p = addr_conn.sin_port;
+	return p;
+}
+
+int CClientNet::GetStatus() {
+	return status;
 }

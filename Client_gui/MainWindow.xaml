@@ -5,16 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Client_gui"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="433" Width="460">
     <Grid>
         <TextBox x:Name="TextBox_IP" HorizontalAlignment="Left" Height="22" Margin="25,10,0,0" TextWrapping="Wrap" Text="127.0.0.1" VerticalAlignment="Top" Width="120"/>
         <TextBox x:Name="TextBox_Port" HorizontalAlignment="Left" Height="22" Margin="168,10,0,0" TextWrapping="Wrap" Text="8888" VerticalAlignment="Top" Width="124"/>
-        <Button Content="Connect" HorizontalAlignment="Left" Height="22" Margin="334,10,0,0" VerticalAlignment="Top" Width="90" Click="Button_Click"/>
-        <TextBox x:Name="TextBox_Msg" HorizontalAlignment="Left" Height="25" Margin="25,48,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="267"/>
-        <Button Content="Button" HorizontalAlignment="Left" Height="25" Margin="334,48,0,0" VerticalAlignment="Top" Width="90" Click="Button_Click_1"/>
-        <ListBox x:Name="ListBox_ErrMsg" HorizontalAlignment="Left" Height="181" Margin="25,93,0,0" VerticalAlignment="Top" Width="399"/>
-        <Label x:Name="Status" Content="Label" HorizontalAlignment="Left" Height="31" Margin="438,6,0,0" VerticalAlignment="Top" Width="59"/>
-        <Button Content="Button" HorizontalAlignment="Left" Height="26" Margin="330,283,0,0" VerticalAlignment="Top" Width="82" Click="Button_Click_2"/>
+        <Button x:Name="Button_S" Content="连接" HorizontalAlignment="Left" Height="22" Margin="334,10,0,0" VerticalAlignment="Top" Width="90" Click="Button_Click"/>
+        <TextBox x:Name="TextBox_Msg" HorizontalAlignment="Left" Height="25" Margin="25,96,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="267"/>
+        <Button Content="发送" HorizontalAlignment="Left" Height="25" Margin="334,96,0,0" VerticalAlignment="Top" Width="90" Click="Button_Click_1"/>
+        <ListBox x:Name="ListBox_ErrMsg" HorizontalAlignment="Left" Height="181" Margin="17,137,0,0" VerticalAlignment="Top" Width="399"/>
+        <Label x:Name="Status" Content="未连接" HorizontalAlignment="Left" Height="31" Margin="86,50,0,0" VerticalAlignment="Top" Width="241"/>
+        <Button Content="Button" HorizontalAlignment="Left" Height="26" Margin="334,335,0,0" VerticalAlignment="Top" Width="82" Click="Button_Click_2"/>
+        <Label Content="状态：" HorizontalAlignment="Left" Height="31" Margin="25,50,0,0" VerticalAlignment="Top" Width="46"/>
 
     </Grid>
 </Window>

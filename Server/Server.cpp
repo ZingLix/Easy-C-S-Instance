@@ -169,5 +169,27 @@ void CServerNet::SendMsg(int index,std::string s) {
 
 void CServerNet::CloseClient(int index) {
 	SendMsg(index, "CloseConnection");
-	
+	msglist[index]->status = 1;
+}
+
+int CServerNet::GetStatus(int index) {
+	return msglist[index]->status;
+}
+
+std::string CServerNet::GetIP(int index)
+{
+	SOCKADDR_IN addr_conn;
+	int nSize = sizeof(addr_conn);
+	getpeername(msglist[index]->Soc, (SOCKADDR *)&addr_conn, &nSize);
+	std::string s = inet_ntoa(addr_conn.sin_addr);
+	return s;
+}
+
+int CServerNet::GetPort(int index)
+{
+	SOCKADDR_IN addr_conn;
+	int nSize = sizeof(addr_conn);
+	getpeername(msglist[index]->Soc, (SOCKADDR *)&addr_conn, &nSize);
+	int s = addr_conn.sin_port;
+	return s;
 }

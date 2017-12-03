@@ -35,6 +35,15 @@ public:
 	void CloseClient(int index) {
 		ser->CloseClient(index);
 	}
+
+	int GetStatus(int index) { return ser->GetStatus(index); }
+
+	System::String^ GetIP(int index) {
+		std::string str = ser->GetIP(index);
+		System::String ^S = gcnew System::String(str.c_str());
+		return S;
+	}
+	int GetPort(int index) { return ser->GetPort(index); }
 private:
 	CServerNet *ser;
 };

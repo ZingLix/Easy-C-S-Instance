@@ -12,6 +12,14 @@ public:
 		System::String ^S = gcnew System::String(str.c_str());
 		return S;
 	}
+
+	System::String^ GetIP() {
+		std::string str = client->GetIP();
+		System::String ^S = gcnew System::String(str.c_str());
+		return S;
+	}
+	int GetPort() { return client->GetPort(); }
+	int GetStatus() { return client->GetStatus(); }
 private:
 	CClientNet *client;
 };

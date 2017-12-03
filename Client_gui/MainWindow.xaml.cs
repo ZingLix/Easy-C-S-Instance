@@ -34,9 +34,6 @@ namespace Client_gui
         {
             InitializeComponent();
             client = new Client_managed();
-            UIRefreshRef = new ThreadStart(ErrMsgRefresh);
-            UIRefreshThread = new Thread(UIRefreshRef);
-            UIRefreshThread.Start();
         }
 
         public void StartClient()
@@ -72,9 +69,21 @@ namespace Client_gui
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            if (client.GetStatus() == 0)
+            {
+
             ClientThreadRef = new ThreadStart(StartClient);
             ClientThread = new Thread(ClientThreadRef);
             ClientThread.Start();
+                UIRefreshRef = new ThreadStart(ErrMsgRefresh);
+                UIRefreshThread = new Thread(UIRefreshRef);
+                UIRefreshThread.Start();
+
+            }
+            else
+            {
+                client.Close();
+            }
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
@@ -102,6 +111,17 @@ namespace Client_gui
                 
             ListBox_ErrMsg.ItemsSource = bs;
 
+                if (client.GetStatus() == 1)
+                {
+                    Status.Content = "连接正常,运行在"+client.GetIP() + ":" + client.GetPort().ToString();
+                    Button_S.Content = "断开";
+                }
+                else
+                {
+                    Status.Content = "连接已关闭";
+                    Button_S.Content = "连接";
+                    return;
+                }
                 for (int i = ErrMsgList.Count; i < client.errMsgCount(); i++)
                 {
                     ErrMsgList.Add(client.errMsg(i));

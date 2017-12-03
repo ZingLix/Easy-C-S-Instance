@@ -18,8 +18,12 @@ public:
 	std::string* errMsg(int i) { return ErrMsgList[i]; }
 	void RecvMsg();
 	void Close();
+	std::string GetIP();
+	int GetPort();
+	int GetStatus();
 
 private:
 	SOCKET m_sock;
+	int status;
 	std::vector<std::string*> ErrMsgList;
 };
