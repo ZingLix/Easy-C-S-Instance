@@ -77,10 +77,22 @@ namespace Server_gui
 
         private void button_Click(object sender, RoutedEventArgs e)
         {
+            if (server.GetServerStatus() == 0)
+            {
+
             serverThreadRef = new ThreadStart(StartSever);
             serverThread = new Thread(serverThreadRef);
             serverThread.Start();
-            label1.Content = "Running";
+            label1.Content = "正在运行...";
+                button.Content = "停止";
+            }
+            else
+            {
+                serverThread.Abort();
+                button.Content = "运行";
+                server.close();
+                label1.Content = "未运行";
+            }
         }
 
         public void StartSever()
@@ -127,6 +139,24 @@ namespace Server_gui
                         {
                                     clientlist[i].msglist.Add(server.msg(i, j));
                         }
+                        if (listBox.SelectedIndex==-1) {
+                            label_status.Content = "未选中";
+                            button_close.IsEnabled = false;
+                            button_send.IsEnabled = false;
+                        }
+                        else if (server.GetStatus(listBox.SelectedIndex) == 0&&server.GetIP(listBox.SelectedIndex)!="204.204.204.204")
+                        {
+
+                            label_status.Content = "连接正常";
+                            button_close.IsEnabled = true;
+                            button_send.IsEnabled = true;
+                        }
+                        else
+                        {
+                            label_status.Content = "连接已关闭";
+                            button_close.IsEnabled = false;
+                            button_send.IsEnabled = false;
+                        }
                     });
                 }
                 Thread.Sleep(100);
@@ -165,16 +195,8 @@ namespace Server_gui
         private void listBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             msglistbs.DataSource = clientlist[listBox.SelectedIndex].msglist;
-            if (server.GetStatus(listBox.SelectedIndex) == 0)
-            {
-
-                label_status.Content = "连接正常";
-            }
-            else
-            {
-                label_status.Content = "连接已关闭";
-            }
-            label_IP.Content = server.GetIP(listBox.SelectedIndex);
+            
+            //label_IP.Content = server.GetIP(listBox.SelectedIndex);
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
@@ -187,15 +209,7 @@ namespace Server_gui
         private void Button_Click_4(object sender, RoutedEventArgs e)
         {
             server.CloseClient(listBox.SelectedIndex);
-            if (server.GetStatus(listBox.SelectedIndex) == 0)
-            {
-
-                label_status.Content = "连接正常";
-            }
-            else
-            {
-                label_status.Content = "连接已关闭";
-            }
+            
         }
 
         private void textBox_TextChanged(object sender, TextChangedEventArgs e)

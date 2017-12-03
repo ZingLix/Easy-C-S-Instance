@@ -102,33 +102,46 @@ namespace Client_gui
             BindingList<string> ErrMsgList = new BindingList<string>();
             BindingSource bs = new BindingSource();
             bs.DataSource = ErrMsgList;
-            while (true)
-            {
+
+
 
             App.Current.Dispatcher.Invoke((Action)delegate // <--- HERE
             {
                 //  _matchObsCollection.Add(match);
-                
-            ListBox_ErrMsg.ItemsSource = bs;
+                ListBox_ErrMsg.ItemsSource = bs;
 
-                if (client.GetStatus() == 1)
-                {
-                    Status.Content = "连接正常,运行在"+client.GetIP() + ":" + client.GetPort().ToString();
-                    Button_S.Content = "断开";
-                }
-                else
-                {
-                    Status.Content = "连接已关闭";
-                    Button_S.Content = "连接";
-                    return;
-                }
-                for (int i = ErrMsgList.Count; i < client.errMsgCount(); i++)
-                {
-                    ErrMsgList.Add(client.errMsg(i));
-                }
             });
-                Thread.Sleep(100);
-            }
+                while (true)
+                {
+
+                App.Current.Dispatcher.Invoke((Action)delegate // <--- HERE
+                {
+                    //  _matchObsCollection.Add(match);
+                    
+
+                for (int i = ErrMsgList.Count; i < client.errMsgCount(); i++)
+                    {
+                        ErrMsgList.Add(client.errMsg(i));
+                    }
+                    if (client.GetStatus() == 1)
+                    {
+                        Status.Content = "已连接至" + client.GetIP() + ":" + client.GetPort().ToString();
+                        Button_S.Content = "断开";
+                        Button_Sent.IsEnabled = true;
+                    }
+                    else
+                    {
+                        Status.Content = "连接已关闭";
+                        Button_S.Content = "连接";
+                        Button_Sent.IsEnabled = false;
+                        return;
+                    }
+
+                    
+                });
+                    Thread.Sleep(100);
+                }
+
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)

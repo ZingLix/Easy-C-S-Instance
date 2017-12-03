@@ -62,7 +62,7 @@ void CServerNet::Run()
 {
 	//公开连接
 	listen(m_sock, 5);
-
+	ServerStatus = 1;
 	sockaddr_in tcpAddr;
 	int len = sizeof(sockaddr);
 	SOCKET newSocket;
@@ -140,6 +140,7 @@ void  CServerNet::RevMsgThread(SOCKET newSocket){
 			//recv返回0表示正常退出
 		{
 			printf("ending connection");
+	//		msglist[count]->status = 1;
 			break;
 		}
 		else {
@@ -167,8 +168,9 @@ void CServerNet::SendMsg(int index,std::string s) {
 	send(S, buf, strlen(buf), 0);
 }
 
-void CServerNet::CloseClient(int index) {
-	SendMsg(index, "CloseConnection");
+void CServerNet::CloseClient(int index,int flag) {
+	if (flag != 0) SendMsg(index, "ServerClosed");
+	else SendMsg(index, "CloseConnection");
 	msglist[index]->status = 1;
 }
 
@@ -192,4 +194,12 @@ int CServerNet::GetPort(int index)
 	getpeername(msglist[index]->Soc, (SOCKADDR *)&addr_conn, &nSize);
 	int s = addr_conn.sin_port;
 	return s;
+}
+
+void CServerNet::close() {
+	for (int i = 0; i < msglist.size(); i++) {
+		if (msglist[i]->status == 0) CloseClient(i,1);
+	}
+	closesocket(m_sock);
+	ServerStatus = 0;
 }

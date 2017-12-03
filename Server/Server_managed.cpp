@@ -9,7 +9,7 @@ public:
 	//更新数据
 	void Run() { ser->Run(); }
 	void close() {
-		ser->Run();
+		ser->close();
 	}
 	int clientCount() { return ser->clientCount(); }
 	int clientMsgCount(int i) { return ser->clientMsgCount(i); }
@@ -44,6 +44,7 @@ public:
 		return S;
 	}
 	int GetPort(int index) { return ser->GetPort(index); }
+	int GetServerStatus() { return ser->GetServerStatus(); }
 private:
 	CServerNet *ser;
 };

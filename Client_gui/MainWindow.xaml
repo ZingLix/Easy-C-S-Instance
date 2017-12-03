@@ -11,7 +11,7 @@
         <TextBox x:Name="TextBox_Port" HorizontalAlignment="Left" Height="22" Margin="168,10,0,0" TextWrapping="Wrap" Text="8888" VerticalAlignment="Top" Width="124"/>
         <Button x:Name="Button_S" Content="连接" HorizontalAlignment="Left" Height="22" Margin="334,10,0,0" VerticalAlignment="Top" Width="90" Click="Button_Click"/>
         <TextBox x:Name="TextBox_Msg" HorizontalAlignment="Left" Height="25" Margin="25,96,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="267"/>
-        <Button Content="发送" HorizontalAlignment="Left" Height="25" Margin="334,96,0,0" VerticalAlignment="Top" Width="90" Click="Button_Click_1"/>
+        <Button x:Name="Button_Sent" IsEnabled="False"  Content="发送" HorizontalAlignment="Left" Height="25" Margin="334,96,0,0" VerticalAlignment="Top" Width="90" Click="Button_Click_1"/>
         <ListBox x:Name="ListBox_ErrMsg" HorizontalAlignment="Left" Height="181" Margin="17,137,0,0" VerticalAlignment="Top" Width="399"/>
         <Label x:Name="Status" Content="未连接" HorizontalAlignment="Left" Height="31" Margin="86,50,0,0" VerticalAlignment="Top" Width="241"/>
         <Button Content="Button" HorizontalAlignment="Left" Height="26" Margin="334,335,0,0" VerticalAlignment="Top" Width="82" Click="Button_Click_2"/>

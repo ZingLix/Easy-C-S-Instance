@@ -20,9 +20,7 @@ public:
 
 	//更新数据
 	void Run();
-	void close() {
-		closesocket(m_sock);
-	}
+	void close();
 	int clientCount() { return msglist.size(); }
 	int clientMsgCount(int i) { return msglist[i]->msg.size(); }
 	int clientID(int i) { return msglist[i]->id; }
@@ -31,17 +29,18 @@ public:
 	std::string* errMsg(int i) { return errMsgList[i]; }
 	void RevMsgThread(SOCKET newSocket);
 	void SendMsg(int index,std::string s);
-	void CloseClient(int index);
+	void CloseClient(int index,int flag=0);
 	int GetStatus(int index);
 	std::string GetIP(int index);
 	int GetPort(int index);
-
+	int GetServerStatus() { return ServerStatus; }
 private:
 	struct clientInfo;
 	std::vector<clientInfo*> msglist;
 	SOCKET m_sock;
 	std::vector<std::string*> errMsgList;
 	std::vector<SOCKET> clientList;
+	int ServerStatus;
 	//std::vector<std::thread&> ClientThreadPool;
 
 	struct clientInfo {

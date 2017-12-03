@@ -45,7 +45,7 @@ int CClientNet::Connect(int port, const char* address)
 		rlt = 3;
 		return rlt;
 	}
-	ErrMsgList.push_back(new std::string("ok: " + std::to_string(iErrMsg)));
+	ErrMsgList.push_back(new std::string("已建立连接，"+GetIP()+":"+std::to_string(GetPort())));
 	status = 1;
 	std::thread thr(&CClientNet::RecvMsg, this);
 	thr.detach();
@@ -80,11 +80,15 @@ void CClientNet::RecvMsg() {
 	char buf[1024];
 	memset(buf, '\0', 1024);
 		char CloseMsg[] = "CloseConnection";
+		char ServerCloseMsg[] = "ServerClosed";
 	do{
 		int k = recv(m_sock, buf, 1024, 0);
 		if (!strcmp(buf,CloseMsg)) {
-			Close();
+			Close("服务器关闭了连接");
 			break;
+		}
+		else if (!strcmp(buf, ServerCloseMsg)) {
+			Close("服务器关闭");
 		}
 		if (status == 0) break;
 		ErrMsgList.push_back(new std::string(buf));
@@ -92,9 +96,10 @@ void CClientNet::RecvMsg() {
 	} while (1);
 }
 
-void CClientNet::Close()
+void CClientNet::Close(std::string str)
 {
 	status = 0;
+	ErrMsgList.push_back(new std::string(str));
 	closesocket(m_sock);
 }
 

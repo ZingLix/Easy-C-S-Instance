@@ -17,7 +17,7 @@ public:
 	int errMsgCount() { return ErrMsgList.size(); }
 	std::string* errMsg(int i) { return ErrMsgList[i]; }
 	void RecvMsg();
-	void Close();
+	void Close(std::string str="客户端关闭了连接");
 	std::string GetIP();
 	int GetPort();
 	int GetStatus();
