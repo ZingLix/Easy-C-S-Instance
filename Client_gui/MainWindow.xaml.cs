@@ -16,6 +16,7 @@ using System.Threading;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.ComponentModel;
+using System.Text.RegularExpressions;
 
 namespace Client_gui
 {
@@ -39,18 +40,31 @@ namespace Client_gui
         public void StartClient()
         {
             string add="";
-            int port = 0;
+            string port = "";
             int flag;
             this.Dispatcher.Invoke(() =>
             {
                 add = TextBox_IP.Text;
-                port = Convert.ToInt32(TextBox_Port.Text);
+                port = TextBox_Port.Text;
             });
+            Regex rx = new Regex(@"((?:(?:25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d)))\.){3}(?:25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d))))");
+            if (!rx.IsMatch(add))
+            {
+                MessageBoxResult result = System.Windows.MessageBox.Show("IP 地址非法。", "提示");
+                return;
+            }
+            System.Text.RegularExpressions.Regex rex =new System.Text.RegularExpressions.Regex(@"^\d+$");
+            if (!rex.IsMatch(port))
+            {
+                MessageBoxResult result = System.Windows.MessageBox.Show("端口非法。", "提示");
+                return;
+            }
+            
             IntPtr intPtrStr = (IntPtr)Marshal.StringToHGlobalAnsi(add);
             unsafe
             {
                 sbyte* sbyteStr = (sbyte*)intPtrStr;
-                flag = client.Connect( port,sbyteStr);
+                flag = client.Connect( Convert.ToInt32(port),sbyteStr);
             }
              this.Dispatcher.Invoke(() =>
             {
@@ -62,7 +76,7 @@ namespace Client_gui
                 else
                 {
                     Status.Content = "Error";
-                    ErrMsgRefresh();
+                //    ErrMsgRefresh();
                 }
             });
         }
@@ -93,7 +107,8 @@ namespace Client_gui
             unsafe
             {
                 sbyte* sbyteStr = (sbyte*)intPtrStr;
-                client.SendMsg(sbyteStr,msg.Length);
+                int len=System.Text.Encoding.Default.GetBytes(msg).Length;
+                client.SendMsg(sbyteStr,len);
             }
         }
 
@@ -138,15 +153,15 @@ namespace Client_gui
                     }
 
                     
+                label_AllInfo.Content = client.GetAllInfoCount();
+                label_CurInfo.Content = client.GetCurrentInfoCount();
                 });
                     Thread.Sleep(100);
                 }
 
         }
 
-        private void Button_Click_2(object sender, RoutedEventArgs e)
-        {
-            ErrMsgRefresh();
-        }
+
     }
 }
+

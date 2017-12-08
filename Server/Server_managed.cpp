@@ -3,7 +3,7 @@
 
 public ref class server_managed {
 public:
-	server_managed() { ser = new CServerNet(); }
+	server_managed() { ser = new ServerClass(); }
 	int Init(const char* address, int port) { return ser->Init(address, port); }
 
 	//更新数据
@@ -45,6 +45,7 @@ public:
 	}
 	int GetPort(int index) { return ser->GetPort(index); }
 	int GetServerStatus() { return ser->GetServerStatus(); }
+	int GetClientInfoCount(int i) { return ser->GetClientInfoCount(i); }
 private:
-	CServerNet *ser;
+	ServerClass *ser;
 };

@@ -6,9 +6,10 @@
 
 #pragma comment(lib, "Ws2_32.lib")
 
-class CClientNet
+class ClientClass
 {
 public:
+	ClientClass():infoCountAll(0){}
 	//连接上指定服务器
 	int Connect(int port, const char* address);
 	//发送信息
@@ -21,8 +22,12 @@ public:
 	std::string GetIP();
 	int GetPort();
 	int GetStatus();
+	int GetAllInfoCount() { return infoCountAll; }
+	int GetCurrentInfoCount() { return infoCountCurrent; }
 
 private:
+	int infoCountCurrent;
+	int infoCountAll;
 	SOCKET m_sock;
 	int status;
 	std::vector<std::string*> ErrMsgList;

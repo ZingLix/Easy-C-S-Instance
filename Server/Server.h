@@ -11,7 +11,7 @@
 //using namespace std;
 #pragma comment (lib,"ws2_32.lib")
 
-class CServerNet
+class ServerClass
 {
 public:
 
@@ -34,6 +34,8 @@ public:
 	std::string GetIP(int index);
 	int GetPort(int index);
 	int GetServerStatus() { return ServerStatus; }
+	int GetClientInfoCount(int i) { return msglist[i]->msg.size(); }
+
 private:
 	struct clientInfo;
 	std::vector<clientInfo*> msglist;

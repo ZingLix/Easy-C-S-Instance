@@ -2,7 +2,7 @@
 
 public ref class Client_managed {
 public:
-	Client_managed() { client = new CClientNet(); }
+	Client_managed() { client = new ClientClass(); }
 	int Connect(int port, const char* address) { return client->Connect(port, address); }
 	int SendMsg(const char* msg, int len) { return client->SendMsg(msg, len); }
 	void Close() { client->Close(); }
@@ -20,6 +20,8 @@ public:
 	}
 	int GetPort() { return client->GetPort(); }
 	int GetStatus() { return client->GetStatus(); }
+	int GetAllInfoCount() { return client->GetAllInfoCount(); }
+	int GetCurrentInfoCount() { return client->GetCurrentInfoCount(); }
 private:
-	CClientNet *client;
+	ClientClass *client;
 };

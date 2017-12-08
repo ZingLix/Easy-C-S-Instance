@@ -1,7 +1,7 @@
 #include "Server.h"
 
 #include <thread>
-int CServerNet::Init(const char* address, int port)
+int ServerClass::Init(const char* address, int port)
 {
 	int rlt = 0;
 
@@ -58,7 +58,7 @@ int CServerNet::Init(const char* address, int port)
 	return rlt;
 }
 
-void CServerNet::Run()
+void ServerClass::Run()
 {
 	//公开连接
 	listen(m_sock, 5);
@@ -99,8 +99,8 @@ void CServerNet::Run()
 
 				//消息处理
 			//	using namespace System::Threading;
-			//	Thread ^ oThread = gcnew Thread(gcnew ParameterizedThreadStart(&CServerNet::RevMsgThread));
-			std::thread thr(&CServerNet::RevMsgThread, this, newSocket);
+			//	Thread ^ oThread = gcnew Thread(gcnew ParameterizedThreadStart(&ServerClass::RevMsgThread));
+			std::thread thr(&ServerClass::RevMsgThread, this, newSocket);
 //			ClientThreadPool.push_back(thr);
 			thr.detach();
 
@@ -114,9 +114,10 @@ void CServerNet::Run()
 	closesocket(m_sock);
 }
 
-void  CServerNet::RevMsgThread(SOCKET newSocket){
+void  ServerClass::RevMsgThread(SOCKET newSocket){
 
 	char buf[1024];
+	memset(buf, '\0', 1024);
 	int rval;
 	clientList.push_back(newSocket);
 	msglist.push_back(new clientInfo(newSocket));
@@ -125,7 +126,7 @@ void  CServerNet::RevMsgThread(SOCKET newSocket){
 	{
 		printf("process\n");
 		//接收数据
-		memset(buf, 0, sizeof(buf));
+		memset(buf, '\0', 1024);
 		rval = recv(newSocket, buf, 1024, 0);
 
 
@@ -148,14 +149,16 @@ void  CServerNet::RevMsgThread(SOCKET newSocket){
 			//显示接收到的数据
 			msglist[count]->msg.push_back(new std::string(buf));
 		}
-
+		memset(buf, '\0', 1024);
 
 	} while (rval != 0);
 	clientList.erase(std::find(clientList.begin(),clientList.end(),newSocket));
 	closesocket(newSocket);
+
+
 }
 
-void CServerNet::SendMsg(int index,std::string s) {
+void ServerClass::SendMsg(int index,std::string s) {
 	char buf[1024];
 	//memset(buf, '\0',1024);
 	//buf[s.length()] = '\0';
@@ -168,17 +171,17 @@ void CServerNet::SendMsg(int index,std::string s) {
 	send(S, buf, strlen(buf), 0);
 }
 
-void CServerNet::CloseClient(int index,int flag) {
+void ServerClass::CloseClient(int index,int flag) {
 	if (flag != 0) SendMsg(index, "ServerClosed");
 	else SendMsg(index, "CloseConnection");
 	msglist[index]->status = 1;
 }
 
-int CServerNet::GetStatus(int index) {
+int ServerClass::GetStatus(int index) {
 	return msglist[index]->status;
 }
 
-std::string CServerNet::GetIP(int index)
+std::string ServerClass::GetIP(int index)
 {
 	SOCKADDR_IN addr_conn;
 	int nSize = sizeof(addr_conn);
@@ -187,7 +190,7 @@ std::string CServerNet::GetIP(int index)
 	return s;
 }
 
-int CServerNet::GetPort(int index)
+int ServerClass::GetPort(int index)
 {
 	SOCKADDR_IN addr_conn;
 	int nSize = sizeof(addr_conn);
@@ -196,7 +199,7 @@ int CServerNet::GetPort(int index)
 	return s;
 }
 
-void CServerNet::close() {
+void ServerClass::close() {
 	for (int i = 0; i < msglist.size(); i++) {
 		if (msglist[i]->status == 0) CloseClient(i,1);
 	}

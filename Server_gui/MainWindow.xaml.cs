@@ -32,26 +32,37 @@ namespace Server_gui
         Thread UIRefresh;
         BindingSource msglistbs;
 
-        public class ClientInfo
+        public class ClientInfo : INotifyPropertyChanged
         {
             public ClientInfo()
             {
                 id = 0;
                 msglist = new BindingList<string>();
-              
+                _connected = true;
             }
             public BindingList<string> msglist;
             public int id;
             public void setid(int i) { id = i;  }
             public string ip;
             public int port;
+            public bool _connected;
             public string name
             {
+                set
+                {
+                    if (value == "1") _connected = true;
+                    else _connected = false;
+                    PropertyChanged(this, new PropertyChangedEventArgs("name"));
+                }
                 get
                 {
-                    return ip+":"+port.ToString();
+                    if (_connected)
+                        return ip + ":" + port.ToString() + " (在线)";
+                    else
+                        return ip + ":" + port.ToString() + " (离线)";
                 }
             }
+            public event PropertyChangedEventHandler PropertyChanged = delegate { };
         }
 
         public MainWindow()
@@ -77,6 +88,13 @@ namespace Server_gui
 
         private void button_Click(object sender, RoutedEventArgs e)
         {
+            string port = textBox.Text;
+            System.Text.RegularExpressions.Regex rex = new System.Text.RegularExpressions.Regex(@"^\d+$");
+            if (!rex.IsMatch(port))
+            {
+                MessageBoxResult result = System.Windows.MessageBox.Show("端口非法。", "提示");
+                return;
+            }
             if (server.GetServerStatus() == 0)
             {
 
@@ -99,10 +117,16 @@ namespace Server_gui
         {
             string add = "127.0.0.1";
             IntPtr intPtrStr = (IntPtr)Marshal.StringToHGlobalAnsi(add);
+            int port=0;
             unsafe
             {
                 sbyte* sbyteStr = (sbyte*)intPtrStr;
-                int flag = server.Init(sbyteStr, 8888);
+                this.Dispatcher.Invoke(() =>
+                {
+                port = port = Convert.ToInt32(textBox.Text);
+                    
+                });
+                int flag = server.Init(sbyteStr, port);
                 if(flag == 0)
                 {
                     server.Run();
@@ -126,6 +150,7 @@ namespace Server_gui
                 {
                     App.Current.Dispatcher.Invoke((Action)delegate // <--- HERE
                     {
+
                         //  _matchObsCollection.Add(match);
                         if (i >= clientlist.Count)
                         {
@@ -139,6 +164,7 @@ namespace Server_gui
                         {
                                     clientlist[i].msglist.Add(server.msg(i, j));
                         }
+                        if (server.GetStatus(i) != 0|| server.GetIP(i) == "204.204.204.204") clientlist[i].name = "0";
                         if (listBox.SelectedIndex==-1) {
                             label_status.Content = "未选中";
                             button_close.IsEnabled = false;
@@ -150,12 +176,15 @@ namespace Server_gui
                             label_status.Content = "连接正常";
                             button_close.IsEnabled = true;
                             button_send.IsEnabled = true;
+                            label_infoCount.Content = server.GetClientInfoCount(listBox.SelectedIndex);
+
                         }
                         else
                         {
                             label_status.Content = "连接已关闭";
                             button_close.IsEnabled = false;
                             button_send.IsEnabled = false;
+                        label_infoCount.Content = server.GetClientInfoCount(listBox.SelectedIndex);
                         }
                     });
                 }
@@ -174,7 +203,7 @@ namespace Server_gui
             }
             BindingSource bs = new BindingSource();
             bs.DataSource = ErrMsgList;
-            listBox3.ItemsSource = bs;
+            //listBox3.ItemsSource = bs;
             for (int i = 0; i < server.clientCount(); i++)
             {
                 if (i >=clientlist.Count)

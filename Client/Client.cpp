@@ -1,6 +1,6 @@
 #include "Client.h"
 #include <thread>
-int CClientNet::Connect(int port, const char* address)
+int ClientClass::Connect(int port, const char* address)
 {
 	int rlt = 0;
 
@@ -13,7 +13,7 @@ int CClientNet::Connect(int port, const char* address)
 		//有错误
 	{
 		printf("failed with wsaStartup error : %d\n", iErrMsg);
-		ErrMsgList.push_back(new std::string("failed with wsaStartup error : " + std::to_string(iErrMsg)));
+		ErrMsgList.push_back(new std::string("WSA启动失败。ERR: " + std::to_string(iErrMsg)));
 		rlt = 1;
 		return rlt;
 	}
@@ -24,7 +24,7 @@ int CClientNet::Connect(int port, const char* address)
 		//创建Socket失败
 	{
 		printf("socket failed with error : %d\n", WSAGetLastError());
-		ErrMsgList.push_back(new std::string("socket failed with error : " + std::to_string(iErrMsg)));
+		ErrMsgList.push_back(new std::string("SOCKET建立失败。ERR: " + std::to_string(iErrMsg)));
 		rlt = 2;
 		return rlt;
 	}
@@ -40,14 +40,15 @@ int CClientNet::Connect(int port, const char* address)
 	if (iErrMsg < 0)
 	{
 		printf("connect failed with error : %d\n", iErrMsg);
-		ErrMsgList.push_back(new std::string("connect failed with error : " + std::to_string(iErrMsg)));
+		ErrMsgList.push_back(new std::string("连接失败。服务器未开启。"));
 
 		rlt = 3;
 		return rlt;
 	}
 	ErrMsgList.push_back(new std::string("已建立连接，"+GetIP()+":"+std::to_string(GetPort())));
 	status = 1;
-	std::thread thr(&CClientNet::RecvMsg, this);
+	infoCountCurrent = 0;
+	std::thread thr(&ClientClass::RecvMsg, this);
 	thr.detach();
 	return rlt;
 }
@@ -55,7 +56,7 @@ int CClientNet::Connect(int port, const char* address)
 
 
 
-int CClientNet::SendMsg(const char* msg, int len)
+int ClientClass::SendMsg(const char* msg, int len)
 {
 	int rlt = 0;
 
@@ -76,7 +77,7 @@ int CClientNet::SendMsg(const char* msg, int len)
 	return rlt;
 }
 
-void CClientNet::RecvMsg() {
+void ClientClass::RecvMsg() {
 	char buf[1024];
 	memset(buf, '\0', 1024);
 		char CloseMsg[] = "CloseConnection";
@@ -92,18 +93,20 @@ void CClientNet::RecvMsg() {
 		}
 		if (status == 0) break;
 		ErrMsgList.push_back(new std::string(buf));
+		infoCountAll++;
+		infoCountCurrent++;
 		memset(buf, '\0', 1024);
 	} while (1);
 }
 
-void CClientNet::Close(std::string str)
+void ClientClass::Close(std::string str)
 {
 	status = 0;
 	ErrMsgList.push_back(new std::string(str));
 	closesocket(m_sock);
 }
 
-std::string CClientNet::GetIP() {
+std::string ClientClass::GetIP() {
 	SOCKADDR_IN addr_conn;
 	int nSize = sizeof(addr_conn);
 	getpeername(m_sock, (SOCKADDR *)&addr_conn, &nSize);
@@ -111,7 +114,7 @@ std::string CClientNet::GetIP() {
 	return s;
 }
 
-int CClientNet::GetPort() {
+int ClientClass::GetPort() {
 	SOCKADDR_IN addr_conn;
 	int nSize = sizeof(addr_conn);
 	getpeername(m_sock, (SOCKADDR *)&addr_conn, &nSize);
@@ -119,6 +122,6 @@ int CClientNet::GetPort() {
 	return p;
 }
 
-int CClientNet::GetStatus() {
+int ClientClass::GetStatus() {
 	return status;
 }

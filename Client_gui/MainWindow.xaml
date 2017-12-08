@@ -5,17 +5,24 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Client_gui"
         mc:Ignorable="d"
-        Title="MainWindow" Height="433" Width="460">
-    <Grid>
+        Title="客户端" Height="575.81" Width="452.003" ResizeMode="NoResize">
+    <Grid Margin="0,0,0,-21">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="70*"/>
+            <ColumnDefinition Width="43*"/>
+        </Grid.ColumnDefinitions>
         <TextBox x:Name="TextBox_IP" HorizontalAlignment="Left" Height="22" Margin="25,10,0,0" TextWrapping="Wrap" Text="127.0.0.1" VerticalAlignment="Top" Width="120"/>
-        <TextBox x:Name="TextBox_Port" HorizontalAlignment="Left" Height="22" Margin="168,10,0,0" TextWrapping="Wrap" Text="8888" VerticalAlignment="Top" Width="124"/>
-        <Button x:Name="Button_S" Content="连接" HorizontalAlignment="Left" Height="22" Margin="334,10,0,0" VerticalAlignment="Top" Width="90" Click="Button_Click"/>
-        <TextBox x:Name="TextBox_Msg" HorizontalAlignment="Left" Height="25" Margin="25,96,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="267"/>
-        <Button x:Name="Button_Sent" IsEnabled="False"  Content="发送" HorizontalAlignment="Left" Height="25" Margin="334,96,0,0" VerticalAlignment="Top" Width="90" Click="Button_Click_1"/>
-        <ListBox x:Name="ListBox_ErrMsg" HorizontalAlignment="Left" Height="181" Margin="17,137,0,0" VerticalAlignment="Top" Width="399"/>
-        <Label x:Name="Status" Content="未连接" HorizontalAlignment="Left" Height="31" Margin="86,50,0,0" VerticalAlignment="Top" Width="241"/>
-        <Button Content="Button" HorizontalAlignment="Left" Height="26" Margin="334,335,0,0" VerticalAlignment="Top" Width="82" Click="Button_Click_2"/>
-        <Label Content="状态：" HorizontalAlignment="Left" Height="31" Margin="25,50,0,0" VerticalAlignment="Top" Width="46"/>
+        <TextBox x:Name="TextBox_Port" HorizontalAlignment="Left" Height="22" Margin="168,10,0,0" TextWrapping="Wrap" Text="8888" VerticalAlignment="Top" Width="124" Grid.ColumnSpan="2"/>
+        <Button x:Name="Button_S" Content="连接" HorizontalAlignment="Left" Height="22" Margin="326,7,0,0" VerticalAlignment="Top" Width="90" Click="Button_Click" Grid.ColumnSpan="2"/>
+        <TextBox x:Name="TextBox_Msg" HorizontalAlignment="Left" Height="25" Margin="25,100,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="267" Grid.ColumnSpan="2"/>
+        <Button x:Name="Button_Sent" IsEnabled="False"  Content="发送" HorizontalAlignment="Left" Height="25" Margin="51,100,0,0" VerticalAlignment="Top" Width="90" Click="Button_Click_1" Grid.Column="1"/>
+        <ListBox x:Name="ListBox_ErrMsg" HorizontalAlignment="Left" Margin="25,137,0,0" Width="391" Grid.ColumnSpan="2" Height="385" VerticalAlignment="Top"/>
+        <Label x:Name="Status" Content="未连接" HorizontalAlignment="Left" Height="31" Margin="86,37,0,0" VerticalAlignment="Top" Width="241" Grid.ColumnSpan="2"/>
+        <Label Content="状态：" HorizontalAlignment="Left" Height="31" Margin="25,37,0,0" VerticalAlignment="Top" Width="46"/>
+        <Label Content="当前连接消息数：" Height="27" Margin="25,68,148,0" VerticalAlignment="Top"/>
+        <Label Grid.ColumnSpan="2" Content="历史总消息数：" HorizontalAlignment="Left" Height="27" Margin="218,68,0,0" VerticalAlignment="Top" Width="93"/>
+        <Label x:Name="label_CurInfo" Content="0" HorizontalAlignment="Left" Height="23" Margin="139,68,0,0" VerticalAlignment="Top" Width="45"/>
+        <Label x:Name="label_AllInfo" Content="0" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="51,68,0,0" VerticalAlignment="Top" Width="45"/>
 
     </Grid>
 </Window>
