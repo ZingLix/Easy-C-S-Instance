@@ -32,6 +32,10 @@ public:
 		ser->SendMsg(index, str);
 	}
 
+	void SendMsg(int index, char *msg,int len) {
+		ser->SendMsg(index, msg,len);
+	}
+
 	void CloseClient(int index) {
 		ser->CloseClient(index);
 	}

@@ -94,7 +94,7 @@ void ServerClass::Run()
 			//新socket连接
 		//	char *pClientIP = inet_ntoa(tcpAddr.sin_addr);
 		//	u_short  clientPort = ntohs(tcpAddr.sin_port);
-			printf("new socket connect : %d\n", newSocket);
+//			printf("new socket connect : %d\n", newSocket);
 			//	errMsgList.push_back(new std::string("new socket connect : "+ std::to_string(newSocket)+",IP:"+pClientIP+",port:"+std::to_string(clientPort)));
 
 				//消息处理
@@ -163,12 +163,25 @@ void ServerClass::SendMsg(int index,std::string s) {
 	//memset(buf, '\0',1024);
 	//buf[s.length()] = '\0';
 	int i;
-	for ( i = 0; i < s.length(); i++) {
-		buf[i] = s[i];
+	for ( i = 0; i < 1024; i++) {
+		buf[i] = s.c_str()[i];
 	}
-	buf[i] = '\0';
+	
 	SOCKET S = msglist[index]->Soc;
 	send(S, buf, strlen(buf), 0);
+}
+
+void ServerClass::SendMsg(int index, char* s,int len) {
+	//char buf[1024];
+	////memset(buf, '\0',1024);
+	////buf[s.length()] = '\0';
+	//int i;
+	//for (i = 0; i < 1024; i++) {
+	//	buf[i] = s.c_str()[i];
+	//}
+
+	SOCKET S = msglist[index]->Soc;
+	send(S, s, len, 0);
 }
 
 void ServerClass::CloseClient(int index,int flag) {
@@ -205,4 +218,8 @@ void ServerClass::close() {
 	}
 	closesocket(m_sock);
 	ServerStatus = 0;
+}
+
+ServerClass::~ServerClass() {
+	close();
 }

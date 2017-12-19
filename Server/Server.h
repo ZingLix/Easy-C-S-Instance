@@ -29,13 +29,14 @@ public:
 	std::string* errMsg(int i) { return errMsgList[i]; }
 	void RevMsgThread(SOCKET newSocket);
 	void SendMsg(int index,std::string s);
+	void SendMsg(int index, char* s,int len);
 	void CloseClient(int index,int flag=0);
 	int GetStatus(int index);
 	std::string GetIP(int index);
 	int GetPort(int index);
 	int GetServerStatus() { return ServerStatus; }
 	int GetClientInfoCount(int i) { return msglist[i]->msg.size(); }
-
+	~ServerClass();
 private:
 	struct clientInfo;
 	std::vector<clientInfo*> msglist;

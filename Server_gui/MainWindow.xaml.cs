@@ -95,12 +95,21 @@ namespace Server_gui
                 MessageBoxResult result = System.Windows.MessageBox.Show("端口非法。", "提示");
                 return;
             }
+            else
+            {
+                if (Convert.ToInt32(port) > 65535 || Convert.ToInt32(port) < 0)
+                {
+                    MessageBoxResult result = System.Windows.MessageBox.Show("端口范围错误。", "提示");
+                    return;
+                }
+            }
             if (server.GetServerStatus() == 0)
             {
 
             serverThreadRef = new ThreadStart(StartSever);
             serverThread = new Thread(serverThreadRef);
-            serverThread.Start();
+                serverThread.Start();
+                this.Closing += Window_Closing;
             label1.Content = "正在运行...";
                 button.Content = "停止";
             }
@@ -224,15 +233,20 @@ namespace Server_gui
         private void listBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             msglistbs.DataSource = clientlist[listBox.SelectedIndex].msglist;
-            
+            listBox_SendMsg.Text = "";
             //label_IP.Content = server.GetIP(listBox.SelectedIndex);
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            String s = listBox_SendMsg.Text;
-
-            server.SendMsg(listBox.SelectedIndex, listBox_SendMsg.Text);
+            string s = listBox_SendMsg.Text;
+            IntPtr intPtrStr = (IntPtr)Marshal.StringToHGlobalAnsi(s);
+            unsafe
+            {
+                sbyte* sbyteStr = (sbyte*)intPtrStr;
+                int len = System.Text.Encoding.Default.GetBytes(s).Length;
+                server.SendMsg(listBox.SelectedIndex, sbyteStr,len);
+            }
         }
 
         private void Button_Click_4(object sender, RoutedEventArgs e)
@@ -243,6 +257,13 @@ namespace Server_gui
 
         private void textBox_TextChanged(object sender, TextChangedEventArgs e)
         {
+
+        }
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            server.close();
+            serverThread.Abort();
+            UIRefresh.Abort();
 
         }
     }

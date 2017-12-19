@@ -24,7 +24,7 @@ public:
 	int GetStatus();
 	int GetAllInfoCount() { return infoCountAll; }
 	int GetCurrentInfoCount() { return infoCountCurrent; }
-
+	~ClientClass() { Close(); }
 private:
 	int infoCountCurrent;
 	int infoCountAll;

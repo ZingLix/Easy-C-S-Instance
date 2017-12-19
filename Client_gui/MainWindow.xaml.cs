@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+//using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -34,6 +34,7 @@ namespace Client_gui
         public MainWindow()
         {
             InitializeComponent();
+            
             client = new Client_managed();
         }
 
@@ -58,6 +59,14 @@ namespace Client_gui
             {
                 MessageBoxResult result = System.Windows.MessageBox.Show("端口非法。", "提示");
                 return;
+            }
+            else
+            {
+                if(Convert.ToInt32(port)>65535|| Convert.ToInt32(port)<0)
+                {
+                    MessageBoxResult result = System.Windows.MessageBox.Show("端口范围错误。", "提示");
+                    return;
+                }
             }
             
             IntPtr intPtrStr = (IntPtr)Marshal.StringToHGlobalAnsi(add);
@@ -92,7 +101,7 @@ namespace Client_gui
                 UIRefreshRef = new ThreadStart(ErrMsgRefresh);
                 UIRefreshThread = new Thread(UIRefreshRef);
                 UIRefreshThread.Start();
-
+                this.Closing += Window_Closing;
             }
             else
             {
@@ -160,7 +169,12 @@ namespace Client_gui
                 }
 
         }
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            ClientThread.Abort();
+            UIRefreshThread.Abort();
 
+        }
 
     }
 }
