@@ -81,6 +81,7 @@ namespace Server_gui
             UIRefreshRef = new ThreadStart(UpdateData);
             UIRefresh = new Thread(UIRefreshRef);
             UIRefresh.Start();
+            this.Closing += StopUIRefresh;
         }
 
         ThreadStart serverThreadRef ;
@@ -109,7 +110,7 @@ namespace Server_gui
             serverThreadRef = new ThreadStart(StartSever);
             serverThread = new Thread(serverThreadRef);
                 serverThread.Start();
-                this.Closing += Window_Closing;
+                this.Closing += StopServer;
             label1.Content = "正在运行...";
                 button.Content = "停止";
             }
@@ -259,12 +260,14 @@ namespace Server_gui
         {
 
         }
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void StopServer(object sender, System.ComponentModel.CancelEventArgs e)
         {
             server.close();
             serverThread.Abort();
+        }
+        private void StopUIRefresh(object sender, System.ComponentModel.CancelEventArgs e)
+        {
             UIRefresh.Abort();
-
         }
     }
 }

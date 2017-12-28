@@ -151,7 +151,7 @@ void  ServerClass::RevMsgThread(SOCKET newSocket){
 		}
 		memset(buf, '\0', 1024);
 
-	} while (rval != 0);
+	} while (rval != 0&&ServerStatus==1);
 	clientList.erase(std::find(clientList.begin(),clientList.end(),newSocket));
 	closesocket(newSocket);
 
