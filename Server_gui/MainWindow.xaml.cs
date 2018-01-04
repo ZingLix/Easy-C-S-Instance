@@ -25,9 +25,9 @@ namespace Server_gui
     public partial class MainWindow : Window
     {
         public server_managed server;
-      //  public BindingList<string> msglist=new BindingList<string>();
+        //  public BindingList<string> msglist=new BindingList<string>();
         public BindingList<ClientInfo> clientlist = new BindingList<ClientInfo>();
-      //  public BindingList<string> msglist = new BindingList<string>();
+        //  public BindingList<string> msglist = new BindingList<string>();
         ThreadStart UIRefreshRef;
         Thread UIRefresh;
         BindingSource msglistbs;
@@ -42,7 +42,7 @@ namespace Server_gui
             }
             public BindingList<string> msglist;
             public int id;
-            public void setid(int i) { id = i;  }
+            public void setid(int i) { id = i; }
             public string ip;
             public int port;
             public bool _connected;
@@ -71,10 +71,9 @@ namespace Server_gui
             server = new server_managed();
             BindingSource bs = new BindingSource();
             bs.DataSource = clientlist;
-            
+
             listBox.ItemsSource = bs;
             listBox.DisplayMemberPath = "name";
-            //  listBox.
             msglistbs = new BindingSource();
 
             listBox1.ItemsSource = msglistbs;
@@ -84,8 +83,8 @@ namespace Server_gui
             this.Closing += StopUIRefresh;
         }
 
-        ThreadStart serverThreadRef ;
-        Thread serverThread ;
+        ThreadStart serverThreadRef;
+        Thread serverThread;
 
         private void button_Click(object sender, RoutedEventArgs e)
         {
@@ -107,11 +106,11 @@ namespace Server_gui
             if (server.GetServerStatus() == 0)
             {
 
-            serverThreadRef = new ThreadStart(StartSever);
-            serverThread = new Thread(serverThreadRef);
+                serverThreadRef = new ThreadStart(StartSever);
+                serverThread = new Thread(serverThreadRef);
                 serverThread.Start();
                 this.Closing += StopServer;
-            label1.Content = "正在运行...";
+                label1.Content = "正在运行...";
                 button.Content = "停止";
             }
             else
@@ -127,17 +126,17 @@ namespace Server_gui
         {
             string add = "127.0.0.1";
             IntPtr intPtrStr = (IntPtr)Marshal.StringToHGlobalAnsi(add);
-            int port=0;
+            int port = 0;
             unsafe
             {
                 sbyte* sbyteStr = (sbyte*)intPtrStr;
                 this.Dispatcher.Invoke(() =>
                 {
-                port = port = Convert.ToInt32(textBox.Text);
-                    
+                    port = port = Convert.ToInt32(textBox.Text);
+
                 });
                 int flag = server.Init(sbyteStr, port);
-                if(flag == 0)
+                if (flag == 0)
                 {
                     server.Run();
                     label1.Content = "Running";
@@ -149,7 +148,7 @@ namespace Server_gui
         {
             serverThread.Abort();
             label1.Content = "Closed";
-            
+
         }
 
         private void UpdateData()
@@ -172,15 +171,16 @@ namespace Server_gui
                         }
                         for (int j = clientlist[i].msglist.Count; j < server.clientMsgCount(i); j++)
                         {
-                                    clientlist[i].msglist.Add(server.msg(i, j));
+                            clientlist[i].msglist.Add(server.msg(i, j));
                         }
-                        if (server.GetStatus(i) != 0|| server.GetIP(i) == "204.204.204.204") clientlist[i].name = "0";
-                        if (listBox.SelectedIndex==-1) {
+                        if (server.GetStatus(i) != 0 || server.GetIP(i) == "204.204.204.204") clientlist[i].name = "0";
+                        if (listBox.SelectedIndex == -1)
+                        {
                             label_status.Content = "未选中";
                             button_close.IsEnabled = false;
                             button_send.IsEnabled = false;
                         }
-                        else if (server.GetStatus(listBox.SelectedIndex) == 0&&server.GetIP(listBox.SelectedIndex)!="204.204.204.204")
+                        else if (server.GetStatus(listBox.SelectedIndex) == 0 && server.GetIP(listBox.SelectedIndex) != "204.204.204.204")
                         {
 
                             label_status.Content = "连接正常";
@@ -194,13 +194,13 @@ namespace Server_gui
                             label_status.Content = "连接已关闭";
                             button_close.IsEnabled = false;
                             button_send.IsEnabled = false;
-                        label_infoCount.Content = server.GetClientInfoCount(listBox.SelectedIndex);
+                            label_infoCount.Content = server.GetClientInfoCount(listBox.SelectedIndex);
                         }
                     });
                 }
                 Thread.Sleep(100);
             }
-            
+
         }
 
 
@@ -213,19 +213,18 @@ namespace Server_gui
             }
             BindingSource bs = new BindingSource();
             bs.DataSource = ErrMsgList;
-            //listBox3.ItemsSource = bs;
             for (int i = 0; i < server.clientCount(); i++)
             {
-                if (i >=clientlist.Count)
+                if (i >= clientlist.Count)
                 {
 
                     clientlist.Add(new ClientInfo());
                     clientlist[i].setid(i);
                 }
-                    for (int j = clientlist[i].msglist.Count; j < server.clientMsgCount(i); j++)
-                    {
-                        clientlist[i].msglist.Add(server.msg(i, j));
-                    }
+                for (int j = clientlist[i].msglist.Count; j < server.clientMsgCount(i); j++)
+                {
+                    clientlist[i].msglist.Add(server.msg(i, j));
+                }
             }
         }
 
@@ -235,7 +234,7 @@ namespace Server_gui
         {
             msglistbs.DataSource = clientlist[listBox.SelectedIndex].msglist;
             listBox_SendMsg.Text = "";
-            //label_IP.Content = server.GetIP(listBox.SelectedIndex);
+
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
@@ -246,14 +245,14 @@ namespace Server_gui
             {
                 sbyte* sbyteStr = (sbyte*)intPtrStr;
                 int len = System.Text.Encoding.Default.GetBytes(s).Length;
-                server.SendMsg(listBox.SelectedIndex, sbyteStr,len);
+                server.SendMsg(listBox.SelectedIndex, sbyteStr, len);
             }
         }
 
         private void Button_Click_4(object sender, RoutedEventArgs e)
         {
             server.CloseClient(listBox.SelectedIndex);
-            
+
         }
 
         private void textBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -264,6 +263,7 @@ namespace Server_gui
         {
             server.close();
             serverThread.Abort();
+            System.Environment.Exit(0);
         }
         private void StopUIRefresh(object sender, System.ComponentModel.CancelEventArgs e)
         {

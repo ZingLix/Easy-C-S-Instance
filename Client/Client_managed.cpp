@@ -23,5 +23,5 @@ public:
 	int GetAllInfoCount() { return client->GetAllInfoCount(); }
 	int GetCurrentInfoCount() { return client->GetCurrentInfoCount(); }
 private:
-	ClientClass *client;
+	ClientClass * client;
 };

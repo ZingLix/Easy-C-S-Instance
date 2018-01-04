@@ -34,13 +34,13 @@ namespace Client_gui
         public MainWindow()
         {
             InitializeComponent();
-            
+
             client = new Client_managed();
         }
 
         public void StartClient()
         {
-            string add="";
+            string add = "";
             string port = "";
             int flag;
             this.Dispatcher.Invoke(() =>
@@ -54,7 +54,7 @@ namespace Client_gui
                 MessageBoxResult result = System.Windows.MessageBox.Show("IP 地址非法。", "提示");
                 return;
             }
-            System.Text.RegularExpressions.Regex rex =new System.Text.RegularExpressions.Regex(@"^\d+$");
+            System.Text.RegularExpressions.Regex rex = new System.Text.RegularExpressions.Regex(@"^\d+$");
             if (!rex.IsMatch(port))
             {
                 MessageBoxResult result = System.Windows.MessageBox.Show("端口非法。", "提示");
@@ -62,32 +62,31 @@ namespace Client_gui
             }
             else
             {
-                if(Convert.ToInt32(port)>65535|| Convert.ToInt32(port)<0)
+                if (Convert.ToInt32(port) > 65535 || Convert.ToInt32(port) < 0)
                 {
                     MessageBoxResult result = System.Windows.MessageBox.Show("端口范围错误。", "提示");
                     return;
                 }
             }
-            
+
             IntPtr intPtrStr = (IntPtr)Marshal.StringToHGlobalAnsi(add);
             unsafe
             {
                 sbyte* sbyteStr = (sbyte*)intPtrStr;
-                flag = client.Connect( Convert.ToInt32(port),sbyteStr);
+                flag = client.Connect(Convert.ToInt32(port), sbyteStr);
             }
-             this.Dispatcher.Invoke(() =>
-            {
-                if (flag == 0)
-                {
+            this.Dispatcher.Invoke(() =>
+           {
+               if (flag == 0)
+               {
 
-                Status.Content = "Connected";
-                }
-                else
-                {
-                    Status.Content = "Error";
-                //    ErrMsgRefresh();
-                }
-            });
+                   Status.Content = "Connected";
+               }
+               else
+               {
+                   Status.Content = "Error";
+               }
+           });
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -95,9 +94,9 @@ namespace Client_gui
             if (client.GetStatus() == 0)
             {
 
-            ClientThreadRef = new ThreadStart(StartClient);
-            ClientThread = new Thread(ClientThreadRef);
-            ClientThread.Start();
+                ClientThreadRef = new ThreadStart(StartClient);
+                ClientThread = new Thread(ClientThreadRef);
+                ClientThread.Start();
                 UIRefreshRef = new ThreadStart(ErrMsgRefresh);
                 UIRefreshThread = new Thread(UIRefreshRef);
                 UIRefreshThread.Start();
@@ -116,8 +115,8 @@ namespace Client_gui
             unsafe
             {
                 sbyte* sbyteStr = (sbyte*)intPtrStr;
-                int len=System.Text.Encoding.Default.GetBytes(msg).Length;
-                client.SendMsg(sbyteStr,len);
+                int len = System.Text.Encoding.Default.GetBytes(msg).Length;
+                client.SendMsg(sbyteStr, len);
             }
         }
 
@@ -129,21 +128,18 @@ namespace Client_gui
 
 
 
-            App.Current.Dispatcher.Invoke((Action)delegate // <--- HERE
+            App.Current.Dispatcher.Invoke((Action)delegate
             {
-                //  _matchObsCollection.Add(match);
+
                 ListBox_ErrMsg.ItemsSource = bs;
 
             });
-                while (true)
-                {
+            while (true)
+            {
 
-                App.Current.Dispatcher.Invoke((Action)delegate // <--- HERE
+                App.Current.Dispatcher.Invoke((Action)delegate
                 {
-                    //  _matchObsCollection.Add(match);
-                    
-
-                for (int i = ErrMsgList.Count; i < client.errMsgCount(); i++)
+                    for (int i = ErrMsgList.Count; i < client.errMsgCount(); i++)
                     {
                         ErrMsgList.Add(client.errMsg(i));
                     }
@@ -161,12 +157,11 @@ namespace Client_gui
                         return;
                     }
 
-                    
-                label_AllInfo.Content = client.GetAllInfoCount();
-                label_CurInfo.Content = client.GetCurrentInfoCount();
+                    label_AllInfo.Content = client.GetAllInfoCount();
+                    label_CurInfo.Content = client.GetCurrentInfoCount();
                 });
-                    Thread.Sleep(100);
-                }
+                Thread.Sleep(100);
+            }
 
         }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

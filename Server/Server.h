@@ -15,28 +15,27 @@ class ServerClass
 {
 public:
 
-	//初始化服务器,返回0表示成功
 	int Init(const char* address, int port);
 
-	//更新数据
 	void Run();
 	void close();
 	int clientCount() { return msglist.size(); }
 	int clientMsgCount(int i) { return msglist[i]->msg.size(); }
 	int clientID(int i) { return msglist[i]->id; }
-	std::string* msg(int i,int j) { return msglist[i]->msg[j]; }
+	std::string* msg(int i, int j) { return msglist[i]->msg[j]; }
 	int errMsgCount() { return errMsgList.size(); }
 	std::string* errMsg(int i) { return errMsgList[i]; }
 	void RevMsgThread(SOCKET newSocket);
-	void SendMsg(int index,std::string s);
-	void SendMsg(int index, char* s,int len);
-	void CloseClient(int index,int flag=0);
+	void SendMsg(int index, std::string s);
+	void SendMsg(int index, char* s, int len);
+	void CloseClient(int index, int flag = 0);
 	int GetStatus(int index);
 	std::string GetIP(int index);
 	int GetPort(int index);
 	int GetServerStatus() { return ServerStatus; }
 	int GetClientInfoCount(int i) { return msglist[i]->msg.size(); }
 	~ServerClass();
+
 private:
 	struct clientInfo;
 	std::vector<clientInfo*> msglist;

@@ -9,16 +9,13 @@
 class ClientClass
 {
 public:
-	ClientClass():infoCountAll(0){}
-	//连接上指定服务器
+	ClientClass() :infoCountAll(0) {}
 	int Connect(int port, const char* address);
-	//发送信息
 	int SendMsg(const char* msg, int len);
-	//关闭
 	int errMsgCount() { return ErrMsgList.size(); }
 	std::string* errMsg(int i) { return ErrMsgList[i]; }
 	void RecvMsg();
-	void Close(std::string str="客户端关闭了连接");
+	void Close(std::string str = "客户端关闭了连接");
 	std::string GetIP();
 	int GetPort();
 	int GetStatus();

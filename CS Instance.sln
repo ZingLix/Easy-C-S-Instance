@@ -1,15 +1,21 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2009
+VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Client", "Client\Client.vcxproj", "{D4653FE2-4D68-4F9D-9B70-24092A0D24A4}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Server", "Server\Server.vcxproj", "{76AF9EE5-C086-47CD-8974-23DAC61C73FD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server_gui", "Server_gui\Server_gui.csproj", "{35ED1433-EEAD-4EAB-A68E-7EC2DFF034EF}"
+	ProjectSection(ProjectDependencies) = postProject
+		{76AF9EE5-C086-47CD-8974-23DAC61C73FD} = {76AF9EE5-C086-47CD-8974-23DAC61C73FD}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client_gui", "Client_gui\Client_gui.csproj", "{313F9488-53E4-4C27-B5B7-1F3367551D94}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D4653FE2-4D68-4F9D-9B70-24092A0D24A4} = {D4653FE2-4D68-4F9D-9B70-24092A0D24A4}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
